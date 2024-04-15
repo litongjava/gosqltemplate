@@ -2,8 +2,8 @@ package gosqltemplate
 
 import (
   "bufio"
+  "embed"
   "errors"
-  "os"
   "path/filepath"
   "strings"
 )
@@ -12,16 +12,17 @@ import (
 var sqlTemplates = make(map[string]string)
 
 // 加载main.sql
-func Init(mainFilePath string) error {
-  return parseSQLFile(mainFilePath)
+func Init(sqlFiles embed.FS, mainFilePath string) error {
+  return parseSQLFile(sqlFiles, mainFilePath)
 }
 
 // 读取文件内容
 // 解析特定的语法，如 '--# ' 和 '--@'
 // 更新 SQL ID 和语句的映射关系
 // 导入和包含其他 SQL 文件
-func parseSQLFile(filePath string) error {
-  file, err := os.Open(filePath)
+func parseSQLFile(sqlFiles embed.FS, filePath string) error {
+
+  file, err := sqlFiles.Open(filePath)
   if err != nil {
     return err
   }
@@ -44,7 +45,7 @@ func parseSQLFile(filePath string) error {
       parts := strings.Fields(line)
       if len(parts) > 1 {
         includedFilePath := filepath.Dir(filePath) + "/" + parts[1]
-        err := parseSQLFile(includedFilePath)
+        err := parseSQLFile(sqlFiles, includedFilePath)
         if err != nil {
           return err
         }

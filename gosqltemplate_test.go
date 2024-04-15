@@ -1,12 +1,16 @@
 package gosqltemplate
 
 import (
+  "embed"
   "fmt"
   "testing"
 )
 
+//go:embed sql-templates/*
+var sqlFiles embed.FS
+
 func TestGetSql(T *testing.T) {
-  err := Init("sql-templates/main.sql")
+  err := Init(sqlFiles, "sql-templates/main.sql")
   if err != nil {
     panic(err)
   }
