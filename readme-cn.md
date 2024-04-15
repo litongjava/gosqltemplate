@@ -11,7 +11,7 @@
 通过以下示例，您可以快速了解如何使用 SQLTemplate 管理您的 SQL 模板：
 
 ```go
-gosqltemplate.Init("sql-templates/main.sql")
+gosqltemplate.InitFromOS("../sql-templates/main.sql")
 var sql, err := gosqltemplate.Get("sqlId")
 ```
 
@@ -55,25 +55,44 @@ select * from posts
 package services
 
 import (
-  "fmt"
-  "github.com/litongjava/gosqltemplate"
-  "testing"
+	"fmt"
+	"github.com/litongjava/gosqltemplate"
+	"testing"
 )
 
 func TestGetUserSql(t *testing.T) {
-  err := gosqltemplate.Init("sql-templates/main.sql")
-  if err != nil {
-    panic(err)
-  }
-  postSelectAll, err := gosqltemplate.Get("users.selectAll") //select * from users
-  if err != nil {
-    panic(err)
-  }
-  fmt.Println(postSelectAll)
+	err := gosqltemplate.InitFromOS("../sql-templates/main.sql")
+	if err != nil {
+		panic(err)
+	}
+	postSelectAll, err := gosqltemplate.Get("posts.selectAll")
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println(postSelectAll)
 }
+
 ```
 
 ## 常用指令
 
 - `--# {sqlId}`：定义一个 SQL ID，注意，ID 命名中间使用空格分割。
 - `--@ {file.sql}`：导入其他 SQL 文件，注意，文件名中间使用空格分割。
+
+## support for embed.FS
+embedfs.go
+
+```go
+import "embed"
+
+//go:embed sql-templates/*
+var SqlFiles embed.FS
+```
+
+main.go
+```go
+err := gosqltemplate.InitFromEmbedFS(SqlFiles, "sql-templates/main.sql")
+if err != nil {
+  panic(err)
+}
+```
