@@ -11,8 +11,8 @@
 通过以下示例，您可以快速了解如何使用 SQLTemplate 管理您的 SQL 模板：
 
 ```go
-sqltemplate.Init("sql-templates")
-var sql = sqltemplate.Get("sqlId")
+gosqltemplate.Init("sql-templates/main.sql")
+var sql, err := gosqltemplate.Get("sqlId")
 ```
 
 ### SQL 文件结构
@@ -37,24 +37,24 @@ var sql = sqltemplate.Get("sqlId")
 
 ```sql
 --# users.selectAll
-SELECT * FROM users;
+select * from users
 ```
 
 #### 帖子 SQL 文件 (posts.sql)
 
 ```sql
 --# posts.selectAll
-SELECT * FROM posts;
+select * from posts
 ```
 
 ### 获取 SQL 语句
 
-初始化模板目录后，可以通过 SQL ID 来获取特定的 SQL 语句：
+初始化main.sql，可以通过 SQL ID 来获取特定的 SQL 语句：
 
 ```go
-sqltemplate.Init("sql-templates")
-var usersSql = sqltemplate.Get("users.selectAll")  // SELECT * FROM users;
-var postsSql = sqltemplate.Get("posts.selectAll")  // SELECT * FROM posts;
+gosqltemplate.Init("sql-templates/main.sql")
+var usersSql,err := gosqltemplate.Get("users.selectAll")  // SELECT * FROM users;
+var postsSql,err := gosqltemplate.Get("posts.selectAll")  // SELECT * FROM posts;
 ```
 
 ## 常用指令
