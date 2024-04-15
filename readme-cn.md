@@ -52,9 +52,25 @@ select * from posts
 初始化main.sql，可以通过 SQL ID 来获取特定的 SQL 语句：
 
 ```go
-gosqltemplate.Init("sql-templates/main.sql")
-var usersSql,err := gosqltemplate.Get("users.selectAll")  // SELECT * FROM users;
-var postsSql,err := gosqltemplate.Get("posts.selectAll")  // SELECT * FROM posts;
+package services
+
+import (
+  "fmt"
+  "github.com/litongjava/gosqltemplate"
+  "testing"
+)
+
+func TestGetUserSql(t *testing.T) {
+  err := gosqltemplate.Init("sql-templates/main.sql")
+  if err != nil {
+    panic(err)
+  }
+  postSelectAll, err := gosqltemplate.Get("users.selectAll") //select * from users
+  if err != nil {
+    panic(err)
+  }
+  fmt.Println(postSelectAll)
+}
 ```
 
 ## 常用指令
